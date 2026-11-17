@@ -1,0 +1,21 @@
+/* Import into src/main.jsx: import './TeamFlow_Dark_Mode.css'; */
+.teamflow-shell.tf-dark { background: #0b1220 !important; color: #e2e8f0; color-scheme: dark; }
+.teamflow-shell.tf-dark .bg-white { background-color: #172033 !important; }
+.teamflow-shell.tf-dark .bg-slate-50 { background-color: #101b2d !important; }
+.teamflow-shell.tf-dark .bg-slate-100 { background-color: #26354a !important; }
+.teamflow-shell.tf-dark .text-slate-900,
+.teamflow-shell.tf-dark .text-slate-800,
+.teamflow-shell.tf-dark .text-slate-700 { color: #e2e8f0 !important; }
+.teamflow-shell.tf-dark .text-slate-600,
+.teamflow-shell.tf-dark .text-slate-500 { color: #a8b8cc !important; }
+.teamflow-shell.tf-dark .text-slate-400 { color: #8fa3ba !important; }
+.teamflow-shell.tf-dark .border-slate-100,
+.teamflow-shell.tf-dark .border-slate-200,
+.teamflow-shell.tf-dark .border-slate-300 { border-color: #35445a !important; }
+.teamflow-shell.tf-dark input,
+.teamflow-shell.tf-dark select,
+.teamflow-shell.tf-dark textarea { background-color: #101b2d; color: #e2e8f0; border-color: #475569; }
+.teamflow-shell.tf-dark input::placeholder,
+.teamflow-shell.tf-dark textarea::placeholder { color: #94a3b8; }
+.teamflow-shell.tf-dark .bg-blue-50 { background-color: #172e4a !important; }
+.teamflow-shell.tf-dark .text-blue-600 { color: #93c5fd !important; }
