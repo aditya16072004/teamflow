@@ -162,6 +162,16 @@ A successful Vercel build does not by itself verify Supabase policies, email del
 **GitHub:** https://github.com/aditya16072004/teamflow
 ## Author
 Developed by **Aditya Kumar Jha** as part of the **KODBEES technical assessment**.
+## AI Tools Used
+During the development of **TeamFlow**, I used **ChatGPT (OpenAI)** as an AI-assisted development tool.
+ChatGPT helped me with:
+- **Project Planning:** Breaking down the technical assessment into manageable development tasks.
+- **Code Assistance:** Writing, reviewing, and improving React components and application functionality.
+- **Debugging:** Identifying and resolving errors related to React, Vite, and Supabase.
+- **Database Integration:** Understanding Supabase authentication, database operations, and Row Level Security (RLS) policies.
+- **Deployment Guidance:** Configuring GitHub, Vercel, environment variables, and authentication redirects.
+- **Documentation:** Structuring and improving the project's README.
+**AI Usage Disclosure:** AI was used as a development assistant for guidance, code suggestions, troubleshooting, and documentation. I reviewed, integrated, and tested the suggested solutions as part of the development process.
 ## License
 No license is specified here. Add a `LICENSE` file if you intend to grant reuse permissions.
 ## Live Demo
