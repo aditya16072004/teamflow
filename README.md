@@ -164,3 +164,7 @@ A successful Vercel build does not by itself verify Supabase policies, email del
 Developed by **Aditya Kumar Jha** as part of the **KODBEES technical assessment**.
 ## License
 No license is specified here. Add a `LICENSE` file if you intend to grant reuse permissions.
+## Live Demo
+🚀 **TeamFlow is deployed on Vercel!**
+**Live Application:** https://teamflow-three-omega.vercel.app/
+**GitHub Repository:** https://github.com/aditya16072004/teamflow
