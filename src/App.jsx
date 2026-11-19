@@ -58,7 +58,6 @@ function Dashboard({ onLogout, session }) {
   const [statusBusy, setStatusBusy] = useState(null);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [lastSeen, setLastSeen] = useState(() => localStorage.getItem("teamflow-activity-seen") || new Date().toISOString());
-
   const [tasksLoading, setTasksLoading] = useState(true);
   const [savingTask, setSavingTask] = useState(false);
   const [taskError, setTaskError] = useState("");
@@ -100,7 +99,6 @@ function Dashboard({ onLogout, session }) {
   const profileName = String(profileUser.user_metadata?.full_name || profileUser.user_metadata?.name || "").trim();
   const displayName = profileName || profileUser.email?.split("@")[0] || "User";
   const profileInitial = displayName.charAt(0).toUpperCase();
-
   useEffect(() => {
     let active = true;
     async function loadProfilePhoto() {
@@ -115,7 +113,6 @@ function Dashboard({ onLogout, session }) {
     loadProfilePhoto();
     return () => { active = false; };
   }, [profileUser.user_metadata?.avatar_path]);
-
   const saveProfileName = async (event) => {
     event.preventDefault();
     const fullName = profileNameInput.trim();
@@ -132,7 +129,6 @@ function Dashboard({ onLogout, session }) {
     }
     setProfileBusy(false);
   };
-
   const uploadProfilePhoto = async (event) => {
     const file = event.target.files?.[0];
     event.target.value = "";
@@ -159,7 +155,6 @@ function Dashboard({ onLogout, session }) {
       setProfileError(`Could not upload photo: ${error.message}`);
     } finally { setProfileBusy(false); }
   };
-
   useEffect(() => {
     let isMounted = true;
     async function loadTasks() {
@@ -182,10 +177,8 @@ function Dashboard({ onLogout, session }) {
       isMounted = false;
     };
   }, [userId, tasksRefreshKey]);
-
   useEffect(() => {
     let isMounted = true;
-
     async function loadTeams() {
       setTeamsLoading(true);
       setTeamError("");
@@ -193,7 +186,6 @@ function Dashboard({ onLogout, session }) {
         .from("teams")
         .select("id, name, description, owner_id, created_at")
         .order("created_at", { ascending: false });
-
       if (!isMounted) return;
       if (error) {
         setTeamError(`Could not load teams: ${error.message}`);
@@ -202,13 +194,11 @@ function Dashboard({ onLogout, session }) {
       }
       setTeamsLoading(false);
     }
-
     loadTeams();
     return () => {
       isMounted = false;
     };
   }, [userId, teamsRefreshKey]);
-
   useEffect(() => {
     let active = true;
     async function loadMembers() {
@@ -231,7 +221,6 @@ function Dashboard({ onLogout, session }) {
     loadMembers();
     return () => { active = false; };
   }, [teams]);
-
   useEffect(() => {
     let active = true;
     async function loadInvitations() {
@@ -262,7 +251,6 @@ function Dashboard({ onLogout, session }) {
     loadInvitations();
     return () => { active = false; };
   }, [userEmail]);
-
   const refreshActivity = async () => {
     setActivityLoading(true);
     const { data, error } = await supabase.from("task_activity")
@@ -272,7 +260,6 @@ function Dashboard({ onLogout, session }) {
     else setActivity(data || []);
     setActivityLoading(false);
   };
-
   useEffect(() => {
     let active = true;
     const load = async () => {
@@ -284,7 +271,6 @@ function Dashboard({ onLogout, session }) {
     load();
     return () => { active = false; };
   }, [userId, tasksRefreshKey]);
-
   useEffect(() => {
     const channel = supabase.channel(`teamflow-live-${userId}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "tasks" },
@@ -296,13 +282,11 @@ function Dashboard({ onLogout, session }) {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [userId]);
-
   const [commentsRefreshKey, setCommentsRefreshKey] = useState(0);
   const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   useEffect(() => {
     if (activityRefreshKey) refreshActivity();
   }, [activityRefreshKey]);
-
   useEffect(() => {
     if (!selectedTask) { setComments([]); return; }
     let active = true;
@@ -317,7 +301,6 @@ function Dashboard({ onLogout, session }) {
       });
     return () => { active = false; };
   }, [selectedTask?.id, commentsRefreshKey]);
-
   const submitComment = async (event) => {
     event.preventDefault();
     if (!selectedTask || !commentText.trim()) return;
@@ -329,7 +312,6 @@ function Dashboard({ onLogout, session }) {
     else { setCommentText(""); setCommentsRefreshKey((key) => key + 1); }
     setCommentBusy(false);
   };
-
   const updateTaskStatus = async (task, status) => {
     if (!task || task.status === status) return;
     if (!canManageTask(task)) {
@@ -344,14 +326,12 @@ function Dashboard({ onLogout, session }) {
     }
     setStatusBusy(null);
   };
-
   const unseenCount = activity.filter((item) => item.actor_id !== userId && item.created_at > lastSeen).length;
   const openNotifications = () => {
     setNotificationsOpen(true);
     const now = new Date().toISOString();
     setLastSeen(now); localStorage.setItem("teamflow-activity-seen", now);
   };
-
   const handleAcceptInvitation = async (invitation) => {
     setAcceptingInvitationId(invitation.id);
     setInvitationError("");
@@ -371,7 +351,6 @@ function Dashboard({ onLogout, session }) {
       setAcceptingInvitationId(null);
     }
   };
-
   const handleRefreshInvitations = async () => {
     setInvitationsLoading(true);
     setInvitationError("");
@@ -386,15 +365,12 @@ function Dashboard({ onLogout, session }) {
     else setPendingInvitations(data || []);
     setInvitationsLoading(false);
   };
-
   const handleCreateTeam = async (event) => {
     event.preventDefault();
     const cleanName = teamName.trim();
     if (!cleanName) return;
-
     setCreatingTeam(true);
     setTeamError("");
-
     try {
       const { data: newTeam, error: createError } = await supabase
         .from("teams")
@@ -405,9 +381,7 @@ function Dashboard({ onLogout, session }) {
         })
         .select()
         .single();
-
       if (createError) throw createError;
-
       const { error: memberError } = await supabase
         .from("team_members")
         .insert({
@@ -415,14 +389,12 @@ function Dashboard({ onLogout, session }) {
           user_id: userId,
           role: "owner",
         });
-
       if (memberError) {
         setTeams((current) => [newTeam, ...current]);
         throw new Error(
           `The team was created, but adding you as its owner-member failed: ${memberError.message}`
         );
       }
-
       setTeams((current) => [newTeam, ...current]);
       setTeamMembers((current) => [...current, { team_id: newTeam.id, user_id: userId, role: "owner" }]);
       setTeamName("");
@@ -434,12 +406,10 @@ function Dashboard({ onLogout, session }) {
       setCreatingTeam(false);
     }
   };
-
   const handleCreateInvitation = async (event, team) => {
     event.preventDefault();
     const email = inviteEmail.trim().toLowerCase();
     if (!email || team.owner_id !== userId) return;
-
     setCreatingInvitation(true);
     setTeamError("");
     setInvitationNotice("");
@@ -451,14 +421,12 @@ function Dashboard({ onLogout, session }) {
         .select("id")
         .single();
       if (insertError) throw insertError;
-
       // Email delivery is separate from saving the invitation.
       // A failed send must not be presented as a failed invitation creation.
       const { data: sendResult, error: sendError } = await supabase.functions.invoke(
         "send-team-invitation",
         { body: { invitationId: invitation.id } }
       );
-
       if (sendError || !sendResult?.success) {
         let details = sendResult?.error || sendError?.message || "Unknown email error";
         if (sendError?.context && typeof sendError.context.json === "function") {
@@ -487,7 +455,6 @@ function Dashboard({ onLogout, session }) {
       setCreatingInvitation(false);
     }
   };
-
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -563,9 +530,7 @@ function Dashboard({ onLogout, session }) {
           .eq("id", editingTaskId)
           .select()
           .single();
-
         if (error) throw error;
-
         setTasks((current) => current.map((task) =>
           task.id === editingTaskId ? mapTask(data) : task
         ));
@@ -579,12 +544,9 @@ function Dashboard({ onLogout, session }) {
           })
           .select()
           .single();
-
         if (error) throw error;
-
         setTasks((current) => [mapTask(data), ...current]);
       }
-
       closeModal();
       setSearchTerm("");
     } catch (error) {
@@ -616,25 +578,20 @@ function Dashboard({ onLogout, session }) {
     const confirmed = window.confirm(
       `Delete "${task.title}"? This action cannot be undone.`
     );
-
     if (!confirmed) return;
     if (!canManageTask(task)) {
       setTaskError("You cannot delete this task.");
       return;
     }
-
     setTaskError("");
-
     const { error } = await supabase
       .from("tasks")
       .delete()
       .eq("id", task.id);
-
     if (error) {
       setTaskError(`Could not delete task: ${error.message}`);
       return;
     }
-
     setTasks((current) => current.filter((item) => item.id !== task.id));
   };
   const closeModal = () => {
@@ -702,7 +659,6 @@ function Dashboard({ onLogout, session }) {
           <p className="mt-2 text-xs leading-5 text-blue-100">
             Keep your team organized and productive.
           </p>
-
         </div>
       </aside>
       {/* Main Dashboard */}
@@ -1087,7 +1043,6 @@ function Dashboard({ onLogout, session }) {
           </section>
         </div>
       )}
-
       {/* Teams Modal */}
       {isTeamsModalOpen && (
         <div
@@ -1112,17 +1067,14 @@ function Dashboard({ onLogout, session }) {
                 <X size={20} />
               </button>
             </div>
-
             {teamError && (
               <p role="alert" className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{teamError}</p>
             )}
-
             {invitationNotice && (
               <p role="status" className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
                 {invitationNotice}
               </p>
             )}
-
             <section className="mb-6 rounded-xl border border-blue-100 bg-blue-50/50 p-4" aria-label="Pending team invitations">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
@@ -1158,7 +1110,6 @@ function Dashboard({ onLogout, session }) {
                 </div>
               )}
             </section>
-
             <div className="mb-5 flex justify-end">
               <button type="button"
                 onClick={() => { setTeamError(""); setIsCreateTeamOpen((current) => !current); }}
@@ -1166,7 +1117,6 @@ function Dashboard({ onLogout, session }) {
                 <Plus size={17} /> Create Team
               </button>
             </div>
-
             {isCreateTeamOpen && (
               <form onSubmit={handleCreateTeam} className="mb-6 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div>
@@ -1193,7 +1143,6 @@ function Dashboard({ onLogout, session }) {
                 </div>
               </form>
             )}
-
             {teamsLoading ? (
               <p className="py-10 text-center text-sm text-slate-400">Loading teams...</p>
             ) : teams.length > 0 ? (
@@ -1264,7 +1213,6 @@ function Dashboard({ onLogout, session }) {
           </div>
         </div>
       )}
-
       {/* Create Task Modal */}
       {isModalOpen && (
         <div
@@ -1456,7 +1404,6 @@ const needsProfileCompletion = (user) => {
     !/^\d{4}-\d{2}-\d{2}$/.test(String(metadata.date_of_birth || "")) ||
     !/^\+[1-9]\d{7,14}$/.test(String(metadata.mobile_number || ""));
 };
-
 function CompleteProfile({ session, onLogout }) {
   const metadata = session.user.user_metadata || {};
   const [name, setName] = useState(metadata.full_name || metadata.name || "");
@@ -1527,7 +1474,6 @@ function CompleteProfile({ session, onLogout }) {
     </div>
   );
 }
-
 function SuccessToast({ message, onClose }) {
   if (!message) return null;
   return (
@@ -1542,18 +1488,15 @@ function SuccessToast({ message, onClose }) {
     </div>
   );
 }
-
 export default function App() {
   const [session, setSession] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [toast, setToast] = useState("");
-
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(""), 4500);
     return () => clearTimeout(timer);
   }, [toast]);
-
   useEffect(() => {
     let active = true;
     supabase.auth.getSession().then(({ data, error }) => {
@@ -1571,7 +1514,6 @@ export default function App() {
     });
     return () => { active = false; subscription.unsubscribe(); };
   }, []);
-
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -1582,7 +1524,6 @@ export default function App() {
     setSession(null);
     setToast("You Have Logout Successfully!");
   };
-
   const content = checkingSession
     ? <div>Loading TeamFlow...</div>
     : !session
@@ -1590,6 +1531,5 @@ export default function App() {
       : needsProfileCompletion(session.user)
         ? <CompleteProfile session={session} onLogout={handleLogout} />
         : <Dashboard session={session} onLogout={handleLogout} />;
-
   return <>{content}<SuccessToast message={toast} onClose={() => setToast("")} /></>;
 }

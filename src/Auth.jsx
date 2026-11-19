@@ -27,7 +27,6 @@ export default function Auth({ onNotify = () => {} }) {
       setLoading(false);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
